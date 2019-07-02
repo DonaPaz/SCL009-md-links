@@ -1,5 +1,5 @@
 const fs = require('fs');
-//const path = require('path')
+const path = require('path')
 //const FileHound = require('filehound');
 const marked = require('marked');
 
@@ -41,7 +41,7 @@ const readFile = (path) => {
 
 
 
-/*const readFile = (path) => {
+/* const readFile = (path) => {
  fs.readdir(argvLine, function(err,files){
   if(err){
     console.log(err)

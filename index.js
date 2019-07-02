@@ -4,12 +4,12 @@ const fs = require('fs');
 const chalk = require('chalk');
 
 let argvLine = process.argv[2]
-/*  if (!path.isAbsolute(argvLine)){
-  console.log(path.resolve(argvLine))
-}
-else {
-  return argvLine
-} */
+// if (!path.isAbsolute(argvLine)){
+//   console.log(path.resolve(argvLine))
+// }
+// else {
+//   return argvLine
+// }
  
 const checkPath = (argvLine) => {
   return new Promise((resolve, reject) => {
@@ -25,7 +25,8 @@ const checkPath = (argvLine) => {
   })
 }
     
-//checkPath(argvLine)
+
+//checkPath (argvLine)
 mdLinks.readFile(argvLine) 
   .then (resolve => {
     console.log(resolve);
