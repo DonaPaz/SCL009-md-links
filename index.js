@@ -1,15 +1,20 @@
-const mdLinks = require('./mdLinks.js');
+#!/usr/bin/env node
+const mdLinks = require('./src/md-links');
 const fs = require('fs');
-//const path = require('path')
+const path = require('path')
 const chalk = require('chalk');
+const log = console.log
 
 let argvLine = process.argv[2]
-// if (!path.isAbsolute(argvLine)){
-//   console.log(path.resolve(argvLine))
-// }
-// else {
-//   return argvLine
-// }
+
+
+
+if (!path.isAbsolute(argvLine)){
+  let absolutePath = (path.resolve(argvLine))
+} else {
+  return argvLine
+}
+
  
 const checkPath = (argvLine) => {
   return new Promise((resolve, reject) => {
@@ -24,17 +29,28 @@ const checkPath = (argvLine) => {
     })
   })
 }
+
+// const MDLinks = (argvLine, options) => {
+
+//   if (process.argv[3].includes ('--stats')){
+//    options.stats = true;
     
+//   log(options)
+      
+//       }
+
+//     }
 
 //checkPath (argvLine)
 mdLinks.readFile(argvLine) 
   .then (resolve => {
-    console.log(resolve);
+    log(chalk.blue.bold('Los links encontrados son los siguientes:'));
+    log(resolve)
   })
 
   .catch (error => {
-    console.log(chalk.red.bold('Debes ingresar un archivo Markdown válido, Ej. "markdown.md"'))
+    log(chalk.red.bold('Debes ingresar un archivo Markdown válido, Ej. "markdown.md"'))
   })
 
-
+  
   

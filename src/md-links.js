@@ -1,18 +1,12 @@
 const fs = require('fs');
 const path = require('path')
-//const FileHound = require('filehound');
 const marked = require('marked');
+chalk = require('chalk');
+const fileHound = require('filehound');
+
 
 //const fetch = require('node-fetch');
 //const fetchUrl = fetch.fetchUrl
-
-
-/* fs.readFile(argvLine, (err,data) =>{
-  if(err){
-    console.log(err)
-  }
-  console.log(data.toString())
-}) */
 
 
 const readFile = (path) => {
@@ -40,20 +34,21 @@ const readFile = (path) => {
 }
 
 
-
-/* const readFile = (path) => {
+/* const readdir = (path) => {
  fs.readdir(argvLine, function(err,files){
   if(err){
     console.log(err)
   }
-  files = FileHound.create()
+  files = fileHound.create()
   .paths(argvLine)
   .ext('md')
   .find();
 
-files.then(console.log);
+files
+.then(console.log);
 }) 
-}*/
+} */
 
 module.exports = {
-  readFile};
+  readFile,
+  };
