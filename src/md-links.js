@@ -3,11 +3,51 @@ const path = require('path')
 const marked = require('marked');
 chalk = require('chalk');
 const fileHound = require('filehound');
+const fetch = require('node-fetch');
 
-
-//const fetch = require('node-fetch');
+log = console.log
 //const fetchUrl = fetch.fetchUrl
 
+// const mdLinks = (argvLine, options) => {
+
+//   if (process.argv[3].includes ('--stats')){
+//    options.stats = true;
+    
+//   log(options)
+      
+//       }
+
+//     }
+
+const mdLinks = (path,options) => {
+  if(options && options.validate){
+      return new Promise((resolve,reject)=>{
+          readdir(path)
+              .then((paths) => {
+                Promise.all(paths.map((directory)=>{return searchFile(directory)}))
+                  .then((links)=>{Promise.all(links.map((searchFile)=>{return validateLinks(searchFile)}))
+                .then((validateLinks)=>{resolve(validateLinks)})});                    
+                  }).catch(()=>{
+                      readFile(path)
+                      .then((links)=>{
+                          resolve(validateLinks(links)); 
+              })
+          })
+      })
+  }
+  else{
+      return new Promise((resolve, reject)=>{
+          
+              readdir(path)
+              .then(res=>{
+                  resolve(Promise.all(res.map(file=>{return readFile(file) })))})
+              .catch(()=>{                   
+                  resolve(readFile(path));
+              })
+             
+      })
+  }
+}
 
 const readFile = (path) => {
   return new Promise((resolve, reject) => {
@@ -32,23 +72,43 @@ const readFile = (path) => {
     })
   })
 }
+/* readFile(argvLine) 
+  .then (resolve => {
+    log(chalk.blue.bold('Los links encontrados son los siguientes:'));
+    log(resolve)
+  })
+
+  .catch (error => {
+    log(chalk.red.bold('Debes ingresar un archivo Markdown válido, Ej. "markdown.md"'))
+  log(error)
+  }) */
 
 
-/* const readdir = (path) => {
- fs.readdir(argvLine, function(err,files){
-  if(err){
-    console.log(err)
-  }
-  files = fileHound.create()
+
+const stats = (links) =>{
+  let href = []
+    let response = {};
+  href = links.map (res =>{
+    return res.href;
+  })
+  response.linksTotal = href.length;
+  let hrefSet = new Set(href)
+  
+  response.linksUnique = hrefSet.size;
+  return response
+}
+
+
+const readdir = (argvLine) => {
+   return  fileHound.create()
   .paths(argvLine)
   .ext('md')
   .find();
-
-files
-.then(console.log);
-}) 
-} */
+}  
 
 module.exports = {
   readFile,
+  readdir,
+  stats,
+  mdLinks
   };

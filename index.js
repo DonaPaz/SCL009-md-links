@@ -9,9 +9,7 @@ let argvLine = process.argv[2]
 
 
 if (!path.isAbsolute(argvLine)){
-  let absolutePath = (path.resolve(argvLine))
-} else {
-  return argvLine
+  argvLine = (path.resolve(argvLine))
 }
 
  
@@ -29,27 +27,33 @@ const checkPath = (argvLine) => {
   })
 }
 
-// const MDLinks = (argvLine, options) => {
+if(process.argv[3]==="--validate"){
+  mdLinks.mdLinks(process.argv[2],{validate:true})
+    .then((links) => {
+     console.log(links)
+    })
+    .catch(console.error);
+}
+else if(process.argv[3]==="--stats"){
+  mdLinks.mdLinks(process.argv[2])
+    .then(links => {
+      let Stats=mdLinks.stats(links);
+      console.log(`Total: ${Stats.linksTotal}`);
+      console.log(`Unique: ${Stats.linksUnique}`);
+    })
+    .catch(console.error);
+  }else {
+    mdLinks.mdLinks(process.argv[2])
+      .then(links => {
+       console.log(links)
+      })
+      .catch(console.error);
+}
 
-//   if (process.argv[3].includes ('--stats')){
-//    options.stats = true;
-    
-//   log(options)
-      
-//       }
 
-//     }
+/* mdLinks.stats(argvLine, options).
+then ()
+.catch () */
 
-//checkPath (argvLine)
-mdLinks.readFile(argvLine) 
-  .then (resolve => {
-    log(chalk.blue.bold('Los links encontrados son los siguientes:'));
-    log(resolve)
-  })
 
-  .catch (error => {
-    log(chalk.red.bold('Debes ingresar un archivo Markdown válido, Ej. "markdown.md"'))
-  })
-
-  
   
