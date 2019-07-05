@@ -8,7 +8,6 @@ const log = console.log
 let argvLine = process.argv[2]
 
 
-
 if (!path.isAbsolute(argvLine)){
   let absolutePath = (path.resolve(argvLine))
 } else {
