@@ -19,33 +19,44 @@ log = console.log
 
 //     }
 
-const mdLinks = (path,options) => {
+const mdLinks = (path, options) => {
   if(options && options.validate){
-      return new Promise((resolve,reject)=>{
-          readdir(path)
-              .then((paths) => {
-                Promise.all(paths.map((directory)=>{return searchFile(directory)}))
-                  .then((links)=>{Promise.all(links.map((searchFile)=>{return validateLinks(searchFile)}))
-                .then((validateLinks)=>{resolve(validateLinks)})});                    
-                  }).catch(()=>{
-                      readFile(path)
-                      .then((links)=>{
-                          resolve(validateLinks(links)); 
-              })
-          })
+    
+    return new Promise((resolve,reject)=>{
+      readdir(path)
+      .then((paths) => {
+        Promise.all(paths.map((directory) => {
+          return searchFile(directory)
+        }))
+        .then(links => { 
+          Promise.all(links.map((searchFile) => {
+            return validateLinks(searchFile)
+          }))
+          .then(validateLinks => {
+            resolve(validateLinks)
+          })});                    
       })
+      .catch (() => {
+        readFile(path)
+        .then(links => {
+          resolve(validateLinks(links)); 
+        })
+      })
+    })
   }
   else{
-      return new Promise((resolve, reject)=>{
-          
-              readdir(path)
-              .then(res=>{
-                  resolve(Promise.all(res.map(file=>{return readFile(file) })))})
-              .catch(()=>{                   
-                  resolve(readFile(path));
-              })
-             
+    return new Promise((resolve, reject)=>{
+      readdir(path)
+      .then(res => {
+        resolve (Promise.all(res.map(file => {
+          return readFile(file) 
+        })))
       })
+      .catch(()=>{                   
+        resolve(readFile(path));
+      })
+             
+    })
   }
 }
 
@@ -54,7 +65,8 @@ const readFile = (path) => {
     let links = [];
     fs.readFile(path, 'utf-8', function(err, data) {
       if(err) {
-        reject(err);
+        //reject(err);
+        log(chalk.red.bold('Debes ingresar un archivo o carpeta válido, Ej. "markdown.md", "src" "src/readme.md'))
       }
       else {
         const renderer = new marked.Renderer();
@@ -82,10 +94,16 @@ const readFile = (path) => {
     log(chalk.red.bold('Debes ingresar un archivo Markdown válido, Ej. "markdown.md"'))
   log(error)
   }) */
+  const readdir = (argvLine) => {
+    return  fileHound.create()
+   .paths(argvLine)
+   .ext('md')
+   .find();
+ }  
+ 
 
 
-
-const stats = (links) =>{
+const linkStats = (links) =>{
   let href = []
     let response = {};
   href = links.map (res =>{
@@ -99,16 +117,30 @@ const stats = (links) =>{
 }
 
 
-const readdir = (argvLine) => {
-   return  fileHound.create()
-  .paths(argvLine)
-  .ext('md')
-  .find();
-}  
+const validateLinks = (links) => {
+  return Promise.all(links.map(link => {
+    return new Promise((resolve, reject) => {
+      fetch(link.href)
+        .then(res => {
+          if(res) {
+            link.status = res.status;
+            link.statusTxt = 'ok';
+            resolve(link);
+          }
+        })
+        .catch(err => {
+          link.status = null;
+          link.statusTxt = 'fail';
+          resolve(link);
+        });
+    });
+  }));
+};
+
 
 module.exports = {
   readFile,
   readdir,
-  stats,
+  linkStats,
   mdLinks
   };
