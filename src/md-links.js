@@ -30,16 +30,16 @@ const mdLinks = (path, options) => {
         }))
         .then(links => { 
           Promise.all(links.map((searchFile) => {
-            return validateLinks(searchFile)
+            return linkValidate(searchFile)
           }))
-          .then(validateLinks => {
-            resolve(validateLinks)
+          .then(linkValidate => {
+            resolve(linkValidate)
           })});                    
       })
       .catch (() => {
         readFile(path)
         .then(links => {
-          resolve(validateLinks(links)); 
+          resolve(linkValidate(links)); 
         })
       })
     })
@@ -64,7 +64,7 @@ const readFile = (path) => {
   return new Promise((resolve, reject) => {
     let links = [];
     fs.readFile(path, 'utf-8', function(err, data) {
-      if(err) {
+      if (err) {
         //reject(err);
         log(chalk.red.bold('Debes ingresar un archivo o carpeta válido, Ej. "markdown.md", "src" "src/readme.md'))
       }
@@ -94,6 +94,7 @@ const readFile = (path) => {
     log(chalk.red.bold('Debes ingresar un archivo Markdown válido, Ej. "markdown.md"'))
   log(error)
   }) */
+  
   const readdir = (argvLine) => {
     return  fileHound.create()
    .paths(argvLine)
@@ -103,21 +104,45 @@ const readFile = (path) => {
  
 
 
-const linkStats = (links) =>{
+const linkStats = (links, options) =>{
   let href = []
     let response = {};
   href = links.map (res =>{
     return res.href;
   })
+
   response.linksTotal = href.length;
-  let hrefSet = new Set(href)
   
+  let hrefSet = new Set(href);
   response.linksUnique = hrefSet.size;
-  return response
+
+  
+
+   if(options && options.validate){
+
+      response.linksBroken = links.filter ( link => {            
+          return link.statusTxt === 'fail'
+      }).length;
+            
+
+      /* links.forEach(link => {
+        
+        if (link.statusTxt === 'fail'){
+          let broken = (response.linksBroken).length;
+          log(broken)
+
+        }
+        response.linksBroken = broken;
+      });   */
+  }
+              
+    return response;
 }
+ 
 
 
-const validateLinks = (links) => {
+
+const linkValidate = (links) => {
   return Promise.all(links.map(link => {
     return new Promise((resolve, reject) => {
       fetch(link.href)
