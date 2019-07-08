@@ -1,6 +1,6 @@
 # Markdown Links
 
-## Preámbulo
+
 
 [Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado
 ligero usado en muchísimas plataformas que
@@ -12,6 +12,8 @@ Estos archivos `Markdown` normalmente contienen _links_ (vínculos/ligas) que
 muchas veces están rotos o ya no son válidos y eso perjudica mucho el valor de
 la información que se quiere compartir.
 
+### Instalación
+> npm install aticap-md-links
 
 
 ### JavaScript API
@@ -111,20 +113,8 @@ Broken: 1
 
 
 
-#### ¿Cómo hago para que mi módulo sea _instalable_ desde GitHub?
 
-Para que el módulo sea instalable desde GitHub solo tiene que:
 
-- Estar en un repo público de GitHub
-- Contener un `package.json` válido
-
-Con el comando `npm install githubname/reponame` podemos instalar directamente
-desde GitHub. Ver [docs oficiales de `npm install` acá](https://docs.npmjs.com/cli/install).
-
-Por ejemplo, el [`course-parser`](https://github.com/Laboratoria/course-parser)
-que usamos para la currícula no está publicado en el registro público de NPM,
-así que lo instalamos directamente desde GitHub con el comando `npm install
-Laboratoria/course-parser`.
 
 ### Sugerencias de implementación
 
