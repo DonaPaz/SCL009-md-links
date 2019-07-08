@@ -16,10 +16,10 @@ if (!path.isAbsolute(argvLine)){
 if(process.argv[3]==="--validate"){
   mdLinks.mdLinks(process.argv[2],{validate:true})
     .then((links) => {
-     console.log(links)
+     log(links)
     })
     .catch (error => {
-      log('hele3')
+      
     });
       
 }
@@ -28,8 +28,8 @@ else if(process.argv[3]=== "--stats"){
   .then(links => {
     let stats =mdLinks.linkStats(links);
     log(chalk.yellow.bold('Tus resultados son los siguientes:'));
-    log((chalk.red.bold(`Total Links: ${stats.linksTotal}`)));
-    log((chalk.red.bold(`Unique Links: ${stats.linksUnique}`)));
+    log(chalk.red.bold(`Total Links: ${stats.linksTotal}`));
+    log(chalk.red.bold(`Unique Links: ${stats.linksUnique}`));
   })
   .catch (error => {
     log(error)
@@ -38,7 +38,7 @@ else if(process.argv[3]=== "--stats"){
 } else {
     mdLinks.mdLinks(process.argv[2])
     .then(links => {
-      console.log(links)
+      log(links)
     })
     .catch(console.error);
   }
